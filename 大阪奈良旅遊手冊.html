@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大阪・奈良 親子旅遊手冊</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+  :root{
+    --bg:#f4f1ea; --card:#fff; --ink:#2b2622; --muted:#6f675e;
+    --accent:#d6453d; --accent2:#2a7d6f; --accent3:#e8a13a; --accent4:#5a6fc0;
+    --line:#e7e1d6; --shadow:0 2px 12px rgba(0,0,0,.07); --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:"Hiragino Sans","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.65;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:780px;margin:0 auto;}
+
+  /* compact header */
+  .topbar{
+    background:linear-gradient(120deg,#d6453d,#e8a13a);color:#fff;
+    padding:10px 16px;display:flex;align-items:center;gap:10px;
+  }
+  .topbar .ttl{font-size:16px;font-weight:800;letter-spacing:.5px;}
+  .topbar .meta{font-size:12px;opacity:.95;margin-left:auto;text-align:right;line-height:1.35;}
+
+  /* tabs */
+  .tabs{
+    display:flex;gap:6px;overflow-x:auto;padding:10px 12px 8px;
+    background:var(--bg);position:sticky;top:0;z-index:600;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;border-bottom:1px solid var(--line);
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:0 0 auto;border:1px solid var(--line);background:var(--card);
+    padding:8px 14px;border-radius:999px;font-size:13.5px;font-weight:700;
+    color:var(--ink);cursor:pointer;white-space:nowrap;box-shadow:var(--shadow);
+    transition:.15s;
+  }
+  .tab.active{color:#fff;border-color:transparent;}
+  .tab[data-day="overview"].active{background:#444;}
+  .tab[data-day="d1"].active{background:var(--accent);}
+  .tab[data-day="d2"].active{background:var(--accent2);}
+  .tab[data-day="d3"].active{background:var(--accent3);}
+  .tab[data-day="d4"].active{background:var(--accent4);}
+  .tab[data-day="info"].active{background:#7a9d54;}
+
+  /* main map */
+  #map{width:100%;height:300px;background:#dce6e3;z-index:1;}
+  .maphint{font-size:12px;color:var(--muted);padding:6px 16px 0;}
+  .legend{
+    display:flex;flex-wrap:wrap;gap:6px 12px;padding:8px 16px 2px;font-size:12.5px;color:var(--muted);
+  }
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .legend i{width:11px;height:11px;border-radius:50%;display:inline-block;}
+
+  .content{padding:6px 16px 70px;}
+  .panel{display:none;}
+  .panel.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  h2.day{font-size:18px;margin:12px 0 2px;}
+  .day-sub{font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:600;}
+
+  .transit{background:#faf7f0;border:1px dashed var(--line);border-radius:12px;padding:11px 13px;margin:12px 0;font-size:13.8px;}
+  .transit b{color:var(--accent2);}
+  .route{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 2px;font-weight:700;font-size:13px;}
+  .route .st{background:#fff;border:1px solid var(--line);border-radius:8px;padding:3px 8px;}
+  .route .arr{color:var(--accent3);font-weight:800;font-size:12px;}
+
+  ul.tl{list-style:none;margin:6px 0;padding:0;position:relative;}
+  ul.tl:before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:var(--line);}
+  ul.tl li{position:relative;padding:0 0 14px 30px;}
+  ul.tl li:before{content:"";position:absolute;left:3px;top:6px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--accent2);}
+  ul.tl .t{font-weight:800;font-size:13px;color:var(--accent2);}
+  ul.tl .a{font-weight:700;font-size:15px;display:block;margin:1px 0 2px;}
+  ul.tl .desc{font-size:13.5px;color:var(--muted);}
+
+  details.spot{border:1px solid var(--line);border-radius:12px;margin:9px 0;overflow:hidden;}
+  details.spot>summary{cursor:pointer;list-style:none;padding:11px 13px;font-weight:800;font-size:14.5px;background:#faf7f0;display:flex;justify-content:space-between;align-items:center;}
+  details.spot>summary::-webkit-details-marker{display:none;}
+  details.spot>summary:after{content:"＋";color:var(--accent);font-weight:800;}
+  details.spot[open]>summary:after{content:"－";}
+  details.spot .inner{padding:6px 13px 13px;}
+
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0;}
+  .pill{background:#f3eee4;border-radius:10px;padding:7px 11px;font-size:13px;}
+  .pill b{color:var(--accent);}
+  table.fee{width:100%;border-collapse:collapse;margin:8px 0;font-size:13.5px;}
+  table.fee th,table.fee td{border:1px solid var(--line);padding:6px 9px;text-align:left;}
+  table.fee th{background:#faf7f0;font-size:12.5px;}
+  table.fee td.n{text-align:right;}
+  .note{background:#fff7e6;border-left:4px solid var(--accent3);border-radius:8px;padding:9px 12px;margin:10px 0;font-size:13.8px;}
+  .warn{background:#fdecea;border-left:4px solid var(--accent);border-radius:8px;padding:9px 12px;margin:10px 0;font-size:13.8px;}
+  .maplink{display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:13px;font-weight:700;color:#fff;background:#4285F4;padding:7px 12px;border-radius:999px;margin:6px 6px 2px 0;}
+  ul.clean{margin:6px 0;padding-left:20px;font-size:14px;}
+  ul.clean li{margin:5px 0;}
+  h3.sec{font-size:15px;margin:16px 0 2px;}
+  .foot{text-align:center;color:var(--muted);font-size:12px;padding:18px 16px;}
+  .num-icon{background:var(--accent2);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="ttl">⛩️ 大阪・奈良 親子之旅</div>
+    <div class="meta">6/17–6/20・四天三夜<br>2大1小・BR178↔BR131</div>
+  </div>
+
+  <!-- tabs -->
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-day="overview">📋 總覽</button>
+    <button class="tab" data-day="d1">Day 1 梅田</button>
+    <button class="tab" data-day="d2">Day 2 海遊館</button>
+    <button class="tab" data-day="d3">Day 3 奈良</button>
+    <button class="tab" data-day="d4">Day 4 回程</button>
+    <button class="tab" data-day="info">🎒 實用資訊</button>
+  </div>
+
+  <!-- main map -->
+  <div id="map"></div>
+  <div class="legend" id="legend"></div>
+
+  <div class="content">
+
+    <!-- OVERVIEW -->
+    <div class="panel active" id="p-overview">
+      <h2 class="day">行程總覽</h2>
+      <div class="day-sub">地圖顯示四天主要據點。點上方分頁可看單日移動路線。</div>
+      <div class="pill-row">
+        <div class="pill"><b>去程 BR178</b><br>桃園 06:30 → 關西 09:55</div>
+        <div class="pill"><b>回程 BR131</b><br>關西 13:10 → 桃園</div>
+      </div>
+      <ul class="clean">
+        <li><b>Day 1（6/17 三）</b>　機場 → 飯店放行李 → 梅田玩具・皮克敏</li>
+        <li><b>Day 2（6/18 四）</b>　海遊館 → 天保山 → 樂高樂園</li>
+        <li><b>Day 3（6/19 五）</b>　奈良看鹿・東大寺一日遊</li>
+        <li><b>Day 4（6/20 六）</b>　飯店 → 機場（BR131 13:10）</li>
+      </ul>
+      <div class="note">🔑 <b>全程口訣：認明「西檢票口（West Gate）」。</b>飯店在 JR 大阪站西北側，去程下車、回程上車、去奈良都走這裡——電梯大又新、人潮少，最適合推推車的家庭。</div>
+      <div class="pill" style="display:block">🏨 HOTEL VISCHIO OSAKA — JR大阪站西側，步行 5 分。</div>
+    </div>
+
+    <!-- DAY 1 -->
+    <div class="panel" id="p-d1">
+      <h2 class="day">機場 ➡️ 梅田玩具與皮克敏</h2>
+      <div class="day-sub">6/17（三）Day 1</div>
+      <div class="transit"><b>🚄 去程：HARUKA（關空特急）</b>
+        <ul class="clean">
+          <li>機場 T1 出關上 2 樓走空橋到「關西機場站」，走 JR <b>藍色閘門</b>掃 QR Code 兌換兩大一小對號座進站。</li>
+          <li>車程約 47 分到 JR 大阪站地下月台，看數位月台門，搭中央大電梯上樓。</li>
+          <li>認明「西檢票口（West Gate）」→ 右轉向北搭電梯上 1 樓 → 經 Grand Front Osaka → 沿室內人行道往 Yodobashi 後方走 <b>5 分鐘</b>到飯店。全程平整、推車無障礙。</li>
+        </ul>
+      </div>
+      <div class="route"><span class="st">關西機場</span><span class="arr">→HARUKA→</span><span class="st">JR大阪站 西檢票口</span><span class="arr">→步行5分→</span><span class="st">飯店</span></div>
+      <ul class="tl">
+        <li><span class="t">09:55</span><span class="a">關西機場抵達</span><span class="desc">出關搭 HARUKA。</span></li>
+        <li><span class="t">中午</span><span class="a">飯店放行李</span><span class="desc">寄放行李、輕裝出發。</span></li>
+        <li><span class="t">下午</span><span class="a">大丸梅田 13F 寶可夢 & 任天堂</span><span class="desc">買皮克敏！</span></li>
+        <li><span class="t">傍晚</span><span class="a">Yodobashi / Kiddy Land</span><span class="desc">夾娃娃、看玩具。</span></li>
+      </ul>
+      <a class="maplink" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Daimaru+Umeda">📍 Google Maps 導航</a>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="panel" id="p-d2">
+      <h2 class="day">海遊館 ➡️ 天保山 ➡️ 樂高樂園</h2>
+      <div class="day-sub">6/18（四）Day 2</div>
+      <div class="transit"><b>🚇 交通：地鐵 御堂筋線 → 中央線</b>
+        <ul class="clean">
+          <li>飯店步行 7 分到御堂筋線「梅田站」。</li>
+          <li>刷 Suica 搭 2 站到「本町站」，站內轉中央線（平面電梯，跟綠色指標），直達「大阪港站」。</li>
+          <li>往 1 / 2 號出口找電梯上地面，直走 5 分看到大摩天輪與海遊館。</li>
+        </ul>
+      </div>
+      <div class="route"><span class="st">梅田站</span><span class="arr">→御堂筋線→</span><span class="st">本町站</span><span class="arr">→中央線→</span><span class="st">大阪港站</span></div>
+      <ul class="tl">
+        <li><span class="t">上午</span><span class="a">海遊館</span><span class="desc">世界級水族館，鯨鯊必看。</span></li>
+        <li><span class="t">中午</span><span class="a">天保山購物中心吃飯</span></li>
+        <li><span class="t">下午</span><span class="a">樂高樂園探索中心（全室內）</span><span class="desc">下雨也不怕。</span></li>
+      </ul>
+      <details class="spot"><summary>🐋 海遊館 票價・時間</summary><div class="inner">
+        <div class="pill-row"><div class="pill">🕙 約 <b>10:00–20:00</b>（依日期）</div></div>
+        <table class="fee"><tr><th>票種</th><th>票價</th></tr>
+          <tr><td>大人（高中以上）</td><td class="n">¥2,700 起*</td></tr>
+          <tr><td>兒童（小・中學生）</td><td class="n">¥1,400</td></tr>
+          <tr><td>幼兒（3歲以上）</td><td class="n">¥700</td></tr>
+          <tr><td>2歲以下</td><td class="n">免費</td></tr></table>
+        <p style="font-size:12.5px;color:var(--muted)">*大人依日期分 ¥2,700/2,900/3,200/3,500，旺日較貴。</p>
+      </div></details>
+      <details class="spot"><summary>🧱 樂高樂園探索中心 票價・時間</summary><div class="inner">
+        <div class="pill-row"><div class="pill">🕙 平日 10–18（末入16）<br>假日 10–19（末入17）</div><div class="pill">🎟️ 3歲以上 <b>¥2,300</b><br>線上前售省 ~¥500</div></div>
+        <div class="warn">⚠️ <b>僅大人或僅小孩無法單獨入場</b>，須同行（你們剛好符合）。</div>
+      </div></details>
+      <a class="maplink" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Osaka+Aquarium+Kaiyukan">📍 Google Maps 導航</a>
+    </div>
+
+    <!-- DAY 3 -->
+    <div class="panel" id="p-d3">
+      <h2 class="day">奈良看鹿・東大寺一日遊</h2>
+      <div class="day-sub">6/19（五）Day 3</div>
+      <div class="transit"><b>🚆 JR 大和路快速（免轉車）</b>
+        <ul class="clean">
+          <li>飯店步行 5 分回 JR 大阪站 1 樓「西檢票口」。</li>
+          <li>找往「大阪環狀線／大和路線」月台（通常 1、2 號），搭「JR 大和路快速」刷 Suica，全車自由座，約 <b>50 分</b>直達 JR 奈良站。</li>
+          <li>奈良站搭電梯下 1 樓走「東口」→ 售票機買奈良巴士一日券或刷 Suica → 公車 10 分到「東大寺大佛殿」，免走 1.5 公里。</li>
+        </ul>
+      </div>
+      <div class="route"><span class="st">JR大阪站</span><span class="arr">→大和路快速50分→</span><span class="st">JR奈良站</span><span class="arr">→巴士10分→</span><span class="st">東大寺</span></div>
+      <ul class="tl">
+        <li><span class="t">上午</span><span class="a">東大寺看大佛</span></li>
+        <li><span class="t">中午前後</span><span class="a">奈良公園・興福寺餵鹿</span><span class="desc">小鹿會鞠躬！</span></li>
+        <li><span class="t">午餐</span><span class="a">東向商店街</span><span class="desc">吹冷氣、嚐大佛布丁。</span></li>
+      </ul>
+      <details class="spot"><summary>🦌 奈良巴士一日券</summary><div class="inner">
+        <div class="pill-row"><div class="pill">大人 <b>¥600</b></div><div class="pill">兒童 <b>¥300</b></div></div>
+        <p style="font-size:12.5px;color:var(--muted)">JR 奈良站東口售票機購買，或直接刷 Suica。</p>
+      </div></details>
+      <details class="spot"><summary>🛕 東大寺 大佛殿 票價・時間</summary><div class="inner">
+        <div class="pill-row"><div class="pill">🕢 6–9月 <b>7:30–17:30</b></div></div>
+        <table class="fee"><tr><th>票種</th><th>拜觀料</th></tr>
+          <tr><td>大人（中學以上）</td><td class="n">¥600</td></tr>
+          <tr><td>小學生</td><td class="n">¥300</td></tr>
+          <tr><td>小學生以下</td><td class="n">免費</td></tr></table>
+        <p style="font-size:12.5px;color:var(--muted)">大佛殿＋博物館套票大人 ¥1,000（省 ¥200）。</p>
+      </div></details>
+      <a class="maplink" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Todaiji+Temple+Nara">📍 Google Maps 導航</a>
+    </div>
+
+    <!-- DAY 4 -->
+    <div class="panel" id="p-d4">
+      <h2 class="day">飯店 ➡️ 機場（BR131 13:10）</h2>
+      <div class="day-sub">6/20（六）Day 4</div>
+      <div class="note">和第一天一樣的路線：步行 5 分回 JR 大阪站「西檢票口」搭 HARUKA 直達機場，<b>不淋雨、不塞車</b>。</div>
+      <ul class="tl">
+        <li><span class="t">09:40</span><span class="a">飯店退房</span></li>
+        <li><span class="t">09:45</span><span class="a">推行李出發</span><span class="desc">步行 5 分到「西檢票口」。</span></li>
+        <li><span class="t">10:00</span><span class="a">進站搭專用電梯</span><span class="desc">下到梅田地下月台（21–24號）。</span></li>
+        <li><span class="t">10:15</span><span class="a">搭 HARUKA 17 號</span><span class="desc">預計 10:16 發車。</span></li>
+        <li><span class="t">11:03</span><span class="a">抵關西機場 T1</span><span class="desc">直奔長榮櫃檯報到。</span></li>
+        <li><span class="t">13:10</span><span class="a">BR131 起飛 ✈️</span></li>
+      </ul>
+      <a class="maplink" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport+Terminal+1">📍 Google Maps 導航</a>
+    </div>
+
+    <!-- INFO -->
+    <div class="panel" id="p-info">
+      <h2 class="day">實用資訊</h2>
+      <h3 class="sec">🌦️ 天氣與穿著（6月中旬・梅雨季）</h3>
+      <div class="pill-row">
+        <div class="pill">🌡️ 白天 <b>27–30°C</b></div>
+        <div class="pill">🌙 夜間 <b>20–23°C</b></div>
+        <div class="pill">💧 濕熱易陣雨</div>
+      </div>
+      <ul class="clean">
+        <li>透氣短袖＋薄外套（室內冷氣強）。</li>
+        <li>防水/快乾好走鞋，奈良走較多路。</li>
+        <li>輕便雨具：折傘＋孩子雨衣（推車雨罩更佳）。</li>
+        <li>帽子、防曬，放晴紫外線強。</li>
+      </ul>
+      <h3 class="sec">🎒 行李打包清單</h3>
+      <ul class="clean">
+        <li><b>證件金流：</b>護照×3、電子機票、訂房確認、HARUKA QR Code、Suica（含小孩）、日圓現金、信用卡、上網 eSIM。</li>
+        <li><b>孩子專屬：</b>替換衣物、薄外套、雨衣、點心、水壺、濕紙巾、常備藥、安撫小物、車上小玩具/貼紙、可折疊推車。</li>
+        <li><b>生活用品：</b>行動電源、充電線、轉接頭（日本 A 型/100V）、折傘、環保袋、OK繃、防蚊液、防曬。</li>
+      </ul>
+      <h3 class="sec">⚠️ 帶 5 歲鐵道迷的移動提醒</h3>
+      <div class="warn"><b>① 月台候車安全：</b>JR 大阪站數位月台門在 HARUKA 進站時部分屏幕會移動，牽緊孩子別太靠近移動的玻璃門。</div>
+      <div class="note"><b>② 認「西檢票口」就對了：</b>飯店在車站西北側，下車/上車/去奈良一律走這裡，電梯大、人潮少。</div>
+      <div class="warn"><b>③ 大行李與推車：</b>有三個連號座位。HARUKA 每節車廂前後有「大行李放置架」，爸爸先鎖大行李，媽媽牽孩子入座；折疊推車放腳前空間或鎖架上。</div>
+      <div class="note"><b>④ 車上驚喜：</b>HARUKA 是「Hello Kitty」彩繪列車，遇車長可禮貌讓孩子打招呼，有時會送限定貼紙或小卡！</div>
+    </div>
+
+  </div>
+
+  <div class="foot">資訊（票價/時間）以官方公告為準，出發前請再次確認。製作日 2026/6/16</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // ---- 各天據點資料 ----
+  var DATA = {
+    overview:{color:"#444", pts:[
+      {n:"✈",t:"關西機場 T1",ll:[34.4338,135.2440]},
+      {n:"🏨",t:"飯店/JR大阪站(梅田)",ll:[34.7035,135.4962]},
+      {n:"🐋",t:"海遊館/天保山",ll:[34.6548,135.4289]},
+      {n:"🦌",t:"奈良 東大寺",ll:[34.6889,135.8398]}
+    ], line:false},
+    d1:{color:"#d6453d", pts:[
+      {n:1,t:"關西機場站",ll:[34.4327,135.2444],d:"搭 HARUKA"},
+      {n:2,t:"JR大阪站・西檢票口",ll:[34.7025,135.4959],d:"地下月台→1樓"},
+      {n:3,t:"HOTEL VISCHIO（放行李）",ll:[34.7048,135.4968]},
+      {n:4,t:"大丸梅田 13F 寶可夢/任天堂",ll:[34.7019,135.4953]},
+      {n:5,t:"Yodobashi / Kiddy Land",ll:[34.7046,135.4974]}
+    ], line:true},
+    d2:{color:"#2a7d6f", pts:[
+      {n:1,t:"梅田站（御堂筋線）",ll:[34.7044,135.4998]},
+      {n:2,t:"本町站（轉中央線）",ll:[34.6824,135.4998]},
+      {n:3,t:"大阪港站",ll:[34.6577,135.4308]},
+      {n:4,t:"海遊館",ll:[34.6545,135.4289]},
+      {n:5,t:"天保山購物中心",ll:[34.6556,135.4292]},
+      {n:6,t:"樂高樂園探索中心",ll:[34.6555,135.4287]}
+    ], line:true},
+    d3:{color:"#e8a13a", pts:[
+      {n:1,t:"JR大阪站（西檢票口）",ll:[34.7025,135.4959]},
+      {n:2,t:"JR奈良站（東口）",ll:[34.6800,135.8186]},
+      {n:3,t:"東大寺 大佛殿",ll:[34.6889,135.8398]},
+      {n:4,t:"奈良公園（餵鹿）",ll:[34.6851,135.8431]},
+      {n:5,t:"興福寺",ll:[34.6823,135.8328]},
+      {n:6,t:"東向商店街（午餐）",ll:[34.6818,135.8295]}
+    ], line:true},
+    d4:{color:"#5a6fc0", pts:[
+      {n:1,t:"HOTEL VISCHIO（退房）",ll:[34.7048,135.4968]},
+      {n:2,t:"JR大阪站（西檢票口）",ll:[34.7025,135.4959]},
+      {n:3,t:"HARUKA 17號",ll:[34.7025,135.4959]},
+      {n:4,t:"關西機場 T1（報到）",ll:[34.4338,135.2440]}
+    ], line:true},
+    info:null
+  };
+
+  var map = L.map('map',{scrollWheelZoom:false}).setView([34.69,135.50],10);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom:19, attribution:'© OpenStreetMap'
+  }).addTo(map);
+
+  var layer = L.layerGroup().addTo(map);
+
+  function numIcon(label,color){
+    return L.divIcon({className:'',html:'<div class="num-icon" style="background:'+color+'">'+label+'</div>',
+      iconSize:[24,24],iconAnchor:[12,12]});
+  }
+
+  function renderDay(key){
+    layer.clearLayers();
+    var d = DATA[key];
+    var legend = document.getElementById('legend');
+    if(!d){ legend.innerHTML=''; return; }
+    var latlngs=[], items=[];
+    d.pts.forEach(function(p){
+      var gmap='https://www.google.com/maps/search/?api=1&query='+p.ll[0]+','+p.ll[1];
+      L.marker(p.ll,{icon:numIcon(p.n,d.color)}).addTo(layer)
+        .bindPopup('<b>'+p.n+'. '+p.t+'</b>'+(p.d?'<br>'+p.d:'')+
+          '<br><a href="'+gmap+'" target="_blank" rel="noopener" '+
+          'style="display:inline-block;margin-top:6px;padding:5px 10px;background:#4285F4;'+
+          'color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:12.5px">📍 在 Google 地圖開啟</a>');
+      latlngs.push(p.ll);
+      items.push('<span><i style="background:'+d.color+'"></i>'+p.n+' '+p.t+'</span>');
+    });
+    if(d.line && latlngs.length>1){
+      L.polyline(latlngs,{color:d.color,weight:4,opacity:.7,dashArray:'1,8',lineCap:'round'}).addTo(layer);
+    }
+    legend.innerHTML = items.join('');
+    map.fitBounds(L.latLngBounds(latlngs).pad(0.25));
+  }
+
+  // ---- tabs ----
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click',function(){
+      var day = tab.getAttribute('data-day');
+      tabs.forEach(function(t){t.classList.remove('active');});
+      tab.classList.add('active');
+      document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+      document.getElementById('p-'+day).classList.add('active');
+      var mapEl=document.getElementById('map'), legEl=document.getElementById('legend');
+      if(day==='info'){ mapEl.style.display='none'; legEl.style.display='none'; }
+      else{
+        mapEl.style.display='block'; legEl.style.display='flex';
+        setTimeout(function(){ map.invalidateSize(); renderDay(day); },60);
+      }
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+
+  // 初次載入：手機上需在版面就緒後重算地圖尺寸，否則圖磚會空白
+  function initMap(){
+    map.invalidateSize();
+    renderDay('overview');
+  }
+  if(document.readyState==='complete'){ initMap(); }
+  else{ window.addEventListener('load',initMap); }
+  // 多次重試，避免手機瀏覽器版面延遲導致圖磚不顯示
+  [200,600,1200].forEach(function(ms){
+    setTimeout(function(){
+      map.invalidateSize();
+      var active=document.querySelector('.tab.active');
+      if(active && active.getAttribute('data-day')!=='info') renderDay(active.getAttribute('data-day'));
+    },ms);
+  });
+</script>
+</body>
+</html>
