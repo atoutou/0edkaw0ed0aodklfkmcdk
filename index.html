@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>戰鬥陀螺 抽選連結</title>
+<style>
+:root{--bg:#eef1f5;--card:#fff;--ink:#141a22;--mute:#5d6877;--line:#d9dfe7;--btn:#0f4fd6;--btnink:#fff;--cx:#6d3ae0;--ux:#d9560b;--bx:#0a7384;--other:#5d6877}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--card:#161c26;--ink:#e8edf4;--mute:#97a3b4;--line:#2a3342;--btn:#4c86ff;--btnink:#05122e;--cx:#a98bff;--ux:#ff9a57;--bx:#4fd0e2;--other:#97a3b4}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:128px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+.top{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 14px 10px;padding-top:max(12px,env(safe-area-inset-top));border-bottom:1px solid var(--line)}
+.top h1{font-size:18px;margin:0 0 8px;font-weight:700;letter-spacing:.02em}
+.top h1 small{font-weight:400;color:var(--mute);font-size:13px;margin-left:6px}
+#q{width:100%;height:44px;border:1px solid var(--line);border-radius:10px;padding:0 14px;font-size:16px;background:var(--card);color:var(--ink)}
+#q:focus,.go:focus-visible,.chip:focus-visible,.specpage:focus-visible{outline:3px solid var(--btn);outline-offset:2px}
+.chips{display:flex;gap:8px;margin-top:8px;overflow-x:auto;scrollbar-width:none}
+.chip{flex:none;height:36px;padding:0 16px;border-radius:18px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:15px}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+main{max-width:620px;margin:0 auto;padding:14px}
+.card{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--other);border-radius:12px;padding:14px 14px 12px;margin-bottom:14px}
+.s-CX{border-left-color:var(--cx)}.s-UX{border-left-color:var(--ux)}.s-BX,.s-BXG{border-left-color:var(--bx)}
+.card header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:10px}
+.code{font-weight:800;font-size:15px;color:var(--cx)}
+.s-UX .code{color:var(--ux)}.s-BX .code,.s-BXG .code{color:var(--bx)}.s-其他 .code{color:var(--other)}
+h2{font-size:20px;margin:0;line-height:1.3;font-weight:700}
+.alias{font-size:13px;color:var(--mute)}
+.count{margin-left:auto;font-size:13px;color:var(--mute)}
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.spec.multi{padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.spec.multi:last-of-type{border-bottom:0}
+.cell{background:var(--bg);border-radius:8px;padding:6px 10px;min-width:0}
+.cell.wide{grid-column:1/-1}
+.cell b{display:block;font-size:12px;color:var(--mute);font-weight:500}
+.cell span{font-size:15px;font-weight:600;word-break:break-word}
+.x{display:inline-block;margin-left:8px;font-size:12px;font-weight:500;color:var(--mute);border:1px solid var(--line);border-radius:6px;padding:0 6px}
+.rnd,.nospec{margin:0 0 8px;font-size:13px;color:var(--mute)}
+.links{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.go{display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;min-height:52px;padding:8px 14px;border-radius:10px;background:var(--btn);color:var(--btnink);text-decoration:none;font-weight:700}
+.go:active{filter:brightness(.88)}
+.go .u{font-weight:500;font-size:14px;opacity:.85;margin-left:auto}
+.go small{flex-basis:100%;font-weight:500;font-size:12px;opacity:.9}
+.specpage{display:inline-block;margin-top:10px;font-size:14px;color:var(--btn);padding:6px 0}
+#none{display:none;text-align:center;color:var(--mute);padding:40px 0}
+footer{max-width:620px;margin:0 auto;padding:4px 14px 28px;font-size:12px;color:var(--mute)}
+</style>
+</head>
+<body>
+<div class="top">
+<h1>戰鬥陀螺 抽選連結<small>8 款・27 個連結</small></h1>
+<input id="q" type="search" placeholder="搜尋型號或名稱，例如 CX-11、帝王" autocomplete="off">
+<div class="chips"><button class="chip on" data-f="all">全部</button><button class="chip" data-f="CX">CX</button><button class="chip" data-f="UX">UX</button></div>
+</div>
+<main>
+<section class="card s-CX" data-s="cx-00-tiga 迪卡狂怒 " data-series="CX" id="CX-00-tiga">
+<header><span class="code">CX-00-tiga</span><h2>迪卡狂怒</h2><span class="count">3 個連結</span></header>
+<div class="spec"><div class="cell wide"><b>上蓋</b><span>迪卡＋狂怒＋F＋T（紋章＋主刃＋超越＋輔助）</span></div><div class="cell"><b>固鎖</b><span>3-60</span></div><div class="cell"><b>軸心</b><span>T（Taper）</span></div></div>
+<div class="links"><a class="go" href="https://lin.ee/RGfh49z" target="_blank" rel="noopener"><span class="n">連結 1</span><span class="u">lin.ee/RGfh49z</span></a><a class="go" href="https://lin.ee/nZ1Rfba" target="_blank" rel="noopener"><span class="n">連結 2</span><span class="u">lin.ee/nZ1Rfba</span></a><a class="go" href="https://lin.ee/7yFPvvL" target="_blank" rel="noopener"><span class="n">連結 3</span><span class="u">lin.ee/7yFPvvL</span></a></div>
+<a class="specpage" href="https://beybladehub.app/parts/combos/cx-00-tiga" target="_blank" rel="noopener">看完整規格頁</a>
+</section><section class="card s-CX" data-s="cx-11 帝王威能改造組 " data-series="CX" id="CX-11">
+<header><span class="code">CX-11</span><h2>帝王威能改造組</h2><span class="count">1 個連結</span></header>
+<div class="spec multi"><div class="cell wide"><b>上蓋</b><span>帝王威能（輔助 H）</span></div><div class="cell"><b>固鎖</b><span>固鎖＋軸心一體</span></div><div class="cell"><b>軸心</b><span>Op</span></div></div>
+<div class="spec multi"><div class="cell wide"><b>上蓋</b><span>魔像奇岩</span></div><div class="cell"><b>固鎖</b><span>M-85</span></div><div class="cell"><b>軸心</b><span>HN</span></div></div>
+<div class="spec multi"><div class="cell wide"><b>上蓋</b><span>鮫鯊撕裂</span></div><div class="cell"><b>固鎖</b><span>5-60</span></div><div class="cell"><b>軸心</b><span>FB</span></div></div>
+<div class="links"><a class="go" href="https://lin.ee/VKJdOmE" target="_blank" rel="noopener"><span class="n">連結 1</span><span class="u">lin.ee/VKJdOmE</span></a></div>
+<a class="specpage" href="https://beybladehub.app/parts/combos/CX-11" target="_blank" rel="noopener">看完整規格頁</a>
+</section><section class="card s-UX" data-s="ux-13 魔像奇岩 " data-series="UX" id="UX-13">
+<header><span class="code">UX-13</span><h2>魔像奇岩</h2><span class="count">4 個連結</span></header>
+<div class="spec"><div class="cell wide"><b>上蓋</b><span>魔像奇岩</span></div><div class="cell"><b>固鎖</b><span>1-60</span></div><div class="cell"><b>軸心</b><span>UN（Under Needle）</span></div></div>
+<div class="links"><a class="go" href="https://lin.ee/wFnUMJ5" target="_blank" rel="noopener"><span class="n">連結 1</span><span class="u">lin.ee/wFnUMJ5</span></a><a class="go" href="https://lin.ee/oFxZg7k" target="_blank" rel="noopener"><span class="n">連結 2</span><span class="u">lin.ee/oFxZg7k</span></a><a class="go" href="https://lin.ee/oE1iSeG" target="_blank" rel="noopener"><span class="n">連結 3</span><span class="u">lin.ee/oE1iSeG</span></a><a class="go" href="https://lin.ee/8sF3etc4" target="_blank" rel="noopener"><span class="n">連結 4</span><span class="u">lin.ee/8sF3etc4</span></a></div>
+<a class="specpage" href="https://beybladehub.app/parts/combos/UX-13" target="_blank" rel="noopener">看完整規格頁</a>
+</section><section class="card s-UX" data-s="ux-14 天蠍長矛 " data-series="UX" id="UX-14">
+<header><span class="code">UX-14</span><h2>天蠍長矛</h2><span class="count">4 個連結</span></header>
+<div class="spec"><div class="cell wide"><b>上蓋</b><span>天蠍長矛</span></div><div class="cell"><b>固鎖</b><span>0-70</span></div><div class="cell"><b>軸心</b><span>Z（Zap）</span></div></div>
+<div class="links"><a class="go" href="https://lin.ee/59NvSZt" target="_blank" rel="noopener"><span class="n">連結 1</span><span class="u">lin.ee/59NvSZt</span></a><a class="go" href="https://lin.ee/Zd8hxBE" target="_blank" rel="noopener"><span class="n">連結 2</span><span class="u">lin.ee/Zd8hxBE</span></a><a class="go" href="https://lin.ee/9vXi7ND" target="_blank" rel="noopener"><span class="n">連結 3</span><span class="u">lin.ee/9vXi7ND</span></a><a class="go" href="https://lin.ee/Xvk6QOo" target="_blank" rel="noopener"><span class="n">連結 4</span><span class="u">lin.ee/Xvk6QOo</span></a></div>
+<a class="specpage" href="https://beybladehub.app/parts/combos/UX-14" target="_blank" rel="noopener">看完整規格頁</a>
+</section><section class="card s-UX" data-s="ux-15 鮫鯊狂鱗改造組 " data-series="UX" id="UX-15">
+<header><span class="code">UX-15</span><h2>鮫鯊狂鱗改造組</h2><span class="count">1 個連結</span></header>
+<div class="spec multi"><div class="cell wide"><b>上蓋</b><span>鮫鯊狂鱗</span></div><div class="cell"><b>固鎖</b><span>4-50</span></div><div class="cell"><b>軸心</b><span>UF</span></div></div>
+<div class="spec multi"><div class="cell wide"><b>上蓋</b><span>暴龍咆哮</span></div><div class="cell"><b>固鎖</b><span>1-70</span></div><div class="cell"><b>軸心</b><span>L</span></div></div>
+<div class="spec multi"><div class="cell wide"><b>上蓋</b><span>惡魔勇氣（輔助 J）</span></div><div class="cell"><b>固鎖</b><span>3-60</span></div><div class="cell"><b>軸心</b><span>GF</span></div></div>
+<div class="links"><a class="go" href="https://lin.ee/Z2M5usd" target="_blank" rel="noopener"><span class="n">連結 1</span><span class="u">lin.ee/Z2M5usd</span></a></div>
+<a class="specpage" href="https://beybladehub.app/parts/combos/UX-15" target="_blank" rel="noopener">看完整規格頁</a>
+</section><section class="card s-UX" data-s="ux-16 時鐘幻象隨機強化組 " data-series="UX" id="UX-16">
+<header><span class="code">UX-16</span><h2>時鐘幻象隨機強化組</h2><span class="count">5 個連結</span></header>
+<p class="rnd">隨機包：每盒隨機一款，以下為包內全部款式</p><div class="spec"><div class="cell wide"><b>上蓋</b><span>時鐘幻象<span class="x">3 款僅配色不同（綠／黑銀／粉紅）</span></span></div><div class="cell"><b>固鎖</b><span>9-65</span></div><div class="cell"><b>軸心</b><span>B</span></div></div>
+<div class="links"><a class="go" href="https://lin.ee/56qBoLb" target="_blank" rel="noopener"><span class="n">連結 1</span><span class="u">lin.ee/56qBoLb</span></a><a class="go" href="https://lin.ee/nXrKCAI" target="_blank" rel="noopener"><span class="n">連結 2</span><span class="u">lin.ee/nXrKCAI</span></a><a class="go" href="https://lin.ee/xhdtH03" target="_blank" rel="noopener"><span class="n">連結 3</span><span class="u">lin.ee/xhdtH03</span></a><a class="go" href="https://lin.ee/PCN6QRjF" target="_blank" rel="noopener"><span class="n">連結 4</span><span class="u">lin.ee/PCN6QRjF</span></a><a class="go" href="https://lin.ee/oTuNZ5lj" target="_blank" rel="noopener"><span class="n">連結 5</span><span class="u">lin.ee/oTuNZ5lj</span></a></div>
+<a class="specpage" href="https://beybladehub.app/parts/combos/UX-16" target="_blank" rel="noopener">看完整規格頁</a>
+</section><section class="card s-UX" data-s="ux-17 隕星龍騎士 左旋" data-series="UX" id="UX-17">
+<header><span class="code">UX-17</span><h2>隕星龍騎士</h2><span class="alias">左旋</span><span class="count">5 個連結</span></header>
+<div class="spec"><div class="cell wide"><b>上蓋</b><span>隕星龍騎士<span class="x">左迴旋</span></span></div><div class="cell"><b>固鎖</b><span>3-70</span></div><div class="cell"><b>軸心</b><span>J（Jolt）</span></div></div>
+<div class="links"><a class="go" href="https://lin.ee/RAnaJVU" target="_blank" rel="noopener"><span class="n">連結 1</span><span class="u">lin.ee/RAnaJVU</span></a><a class="go" href="https://lin.ee/NxC8NHi" target="_blank" rel="noopener"><span class="n">連結 2</span><span class="u">lin.ee/NxC8NHi</span></a><a class="go" href="https://lin.ee/P2isAld" target="_blank" rel="noopener"><span class="n">連結 3</span><span class="u">lin.ee/P2isAld</span></a><a class="go" href="https://lin.ee/Q43LDso" target="_blank" rel="noopener"><span class="n">連結 4</span><span class="u">lin.ee/Q43LDso</span><small>左迴旋</small></a><a class="go" href="https://lin.ee/5ORXW59" target="_blank" rel="noopener"><span class="n">連結 5</span><span class="u">lin.ee/5ORXW59</span></a></div>
+<a class="specpage" href="https://beybladehub.app/parts/combos/UX-17" target="_blank" rel="noopener">看完整規格頁</a>
+</section><section class="card s-UX" data-s="ux-19 子彈獅鷲 " data-series="UX" id="UX-19">
+<header><span class="code">UX-19</span><h2>子彈獅鷲</h2><span class="count">4 個連結</span></header>
+<div class="spec"><div class="cell wide"><b>上蓋</b><span>子彈獅鷲</span></div><div class="cell"><b>固鎖</b><span>一體型（與軸心合一）</span></div><div class="cell"><b>軸心</b><span>H（Hexa）</span></div></div>
+<div class="links"><a class="go" href="https://lin.ee/rxjmMb4" target="_blank" rel="noopener"><span class="n">連結 1</span><span class="u">lin.ee/rxjmMb4</span></a><a class="go" href="https://lin.ee/TVSrIvz" target="_blank" rel="noopener"><span class="n">連結 2</span><span class="u">lin.ee/TVSrIvz</span></a><a class="go" href="https://lin.ee/PX7RP3l" target="_blank" rel="noopener"><span class="n">連結 3</span><span class="u">lin.ee/PX7RP3l</span></a><a class="go" href="https://lin.ee/rafcxQi" target="_blank" rel="noopener"><span class="n">連結 4</span><span class="u">lin.ee/rafcxQi</span></a></div>
+<a class="specpage" href="https://beybladehub.app/parts/combos/UX-19" target="_blank" rel="noopener">看完整規格頁</a>
+</section><p id="none">找不到符合的商品</p>
+</main>
+<footer>上蓋、固鎖、軸心資料來自 beybladehub.app 各商品頁；隨機包與改造組列出盒內全部款式。連結來源為你提供的「陀螺抽選」文件，已去除重複。</footer>
+<script>
+(function(){
+  var q=document.getElementById('q'),cards=[].slice.call(document.querySelectorAll('.card')),chips=[].slice.call(document.querySelectorAll('.chip')),none=document.getElementById('none'),f='all';
+  function run(){
+    var t=q.value.trim().toLowerCase().replace(/\s+/g,''),n=0;
+    cards.forEach(function(c){
+      var ok=(f==='all'||c.dataset.series===f)&&(!t||c.dataset.s.replace(/\s+/g,'').indexOf(t)>-1||c.dataset.s.replace('-','').replace(/\s+/g,'').indexOf(t)>-1);
+      c.style.display=ok?'':'none'; if(ok)n++;
+    });
+    none.style.display=n?'none':'block';
+  }
+  q.addEventListener('input',run);
+  chips.forEach(function(b){b.addEventListener('click',function(){chips.forEach(function(x){x.classList.remove('on')});b.classList.add('on');f=b.dataset.f;run();});});
+})();
+</script>
+</body>
+</html>
